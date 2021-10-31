@@ -9,7 +9,7 @@ class Api {
     var url = Uri.parse('$baseUrl/$endPoint');
     final response = await http.post(
       url,
-      headers: {"Content-Type": "application/json"},
+      headers: {"Content-Type": "application/json", "id": "620710115"},
       body: json.encode(params),
     );
 
@@ -31,7 +31,7 @@ class Api {
   Future<dynamic> fetch(String endPoint, {Map<String, dynamic>? queryParams,}) async {
     String queryString = Uri(queryParameters: queryParams).query;
     var url = Uri.parse('$baseUrl/$endPoint?$queryString');
-    final response = await http.get(url);
+    final response = await http.get(url, headers: {"id": "620710115"});
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonBody = json.decode(response.body);
