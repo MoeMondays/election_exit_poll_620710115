@@ -1,6 +1,5 @@
 import 'package:election_exit_poll_620710115/services/api.dart';
 import 'package:election_exit_poll_620710115/services/candidate_score.dart';
-import 'package:election_exit_poll_620710115/services/candidates_list.dart';
 import 'package:flutter/material.dart';
 
 class CandidatesResult extends StatefulWidget {
@@ -73,91 +72,89 @@ class _CandidatesResultState extends State<CandidatesResult> {
 
   _buildCandidates(){
     return Expanded(
-      child: Container(
-        child: FutureBuilder<List<CandidatesScore>>(
-          future: _candidates,
-          builder: (context, snapshot){
-            if(snapshot.connectionState != ConnectionState.done){
-              return const Center(child: CircularProgressIndicator(),);
-            }
+      child: FutureBuilder<List<CandidatesScore>>(
+        future: _candidates,
+        builder: (context, snapshot){
+          if(snapshot.connectionState != ConnectionState.done){
+            return const Center(child: CircularProgressIndicator(),);
+          }
 
-            if(snapshot.hasError){
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("ERROR: ${snapshot.error}",
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    const SizedBox(height: 20,),
-                    ElevatedButton(
-                      onPressed: (){
-                        setState(() {
-                          _candidates = _loadCandidates();
-                        });
-                      },
-                      child: const Text("RETRY"),
-                    ),
-                  ],
-                ),
-              );
-            }
+          if(snapshot.hasError){
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("ERROR: ${snapshot.error}",
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 20,),
+                  ElevatedButton(
+                    onPressed: (){
+                      setState(() {
+                        _candidates = _loadCandidates();
+                      });
+                    },
+                    child: const Text("RETRY"),
+                  ),
+                ],
+              ),
+            );
+          }
 
-            if(snapshot.hasData){
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index){
-                  CandidatesScore item = snapshot.data![index];
+          if(snapshot.hasData){
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index){
+                CandidatesScore item = snapshot.data![index];
 
-                  return Card(
-                    color: Colors.white.withOpacity(0.8),
-                    margin: const EdgeInsets.all(8),
-                    child: InkWell(
-                      onTap: (){
+                return Card(
+                  color: Colors.white.withOpacity(0.8),
+                  margin: const EdgeInsets.all(8),
+                  child: InkWell(
+                    onTap: (){
 
-                      },
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: Container(
-                              width: 50,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                color: Colors.green,
-                              ),
-                              child: Center(
-                                child: Text("${item.number}",
-                                  style: const TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.white
-                                  ),
+                    },
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              color: Colors.green,
+                            ),
+                            child: Center(
+                              child: Text("${item.number}",
+                                style: const TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white
                                 ),
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: Text("${item.title}${item.firstName} ${item.lastName}",
-                              style: const TextStyle(fontSize: 16),
-                            ),
+                        ),
+                        Expanded(
+                          child: Text("${item.title}${item.firstName} ${item.lastName}",
+                            style: const TextStyle(fontSize: 16),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: Text("${item.score}",
-                              style: const TextStyle(fontSize: 16),
-                            ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Text("${item.score}",
+                            style: const TextStyle(fontSize: 16),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              );
-            }
+                  ),
+                );
+              },
+            );
+          }
 
-            return const SizedBox.shrink();
-          },
-        ),
+          return const SizedBox.shrink();
+        },
       ),
     );
   }

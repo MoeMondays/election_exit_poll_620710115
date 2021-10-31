@@ -78,83 +78,81 @@ class _CandidatesPageState extends State<CandidatesPage> {
 
   _buildCandidates(){
     return Expanded(
-      child: Container(
-        child: FutureBuilder<List<CandidatesList>>(
-          future: _candidates,
-          builder: (context, snapshot){
-            if(snapshot.connectionState != ConnectionState.done){
-              return const Center(child: CircularProgressIndicator(),);
-            }
+      child: FutureBuilder<List<CandidatesList>>(
+        future: _candidates,
+        builder: (context, snapshot){
+          if(snapshot.connectionState != ConnectionState.done){
+            return const Center(child: CircularProgressIndicator(),);
+          }
 
-            if(snapshot.hasError){
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("ERROR: ${snapshot.error}",
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    const SizedBox(height: 20,),
-                    ElevatedButton(
-                      onPressed: (){
-                        setState(() {
-                          _candidates = _loadCandidates();
-                        });
-                      },
-                      child: const Text("RETRY"),
-                    ),
-                  ],
-                ),
-              );
-            }
+          if(snapshot.hasError){
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("ERROR: ${snapshot.error}",
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 20,),
+                  ElevatedButton(
+                    onPressed: (){
+                      setState(() {
+                        _candidates = _loadCandidates();
+                      });
+                    },
+                    child: const Text("RETRY"),
+                  ),
+                ],
+              ),
+            );
+          }
 
-            if(snapshot.hasData){
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index){
-                  CandidatesList item = snapshot.data![index];
+          if(snapshot.hasData){
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index){
+                CandidatesList item = snapshot.data![index];
 
-                  return Card(
-                    color: Colors.white.withOpacity(0.8),
-                    margin: const EdgeInsets.all(8),
-                    child: InkWell(
-                      onTap: (){
-                        _handleClick(index+1);
-                      },
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: Container(
-                              width: 50,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                color: Colors.green,
-                              ),
-                              child: Center(
-                                child: Text("${item.number}",
-                                  style: const TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.white
-                                  ),
+                return Card(
+                  color: Colors.white.withOpacity(0.8),
+                  margin: const EdgeInsets.all(8),
+                  child: InkWell(
+                    onTap: (){
+                      _handleClick(index+1);
+                    },
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              color: Colors.green,
+                            ),
+                            child: Center(
+                              child: Text("${item.number}",
+                                style: const TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white
                                 ),
                               ),
                             ),
                           ),
-                          Text("${item.title}${item.firstName} ${item.lastName}",
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
+                        ),
+                        Text("${item.title}${item.firstName} ${item.lastName}",
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              );
-            }
+                  ),
+                );
+              },
+            );
+          }
 
-            return const SizedBox.shrink();
-          },
-        ),
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
